@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("org.jetbrains.compose")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 kotlin {
@@ -10,7 +11,7 @@ kotlin {
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "shared"
@@ -23,7 +24,7 @@ kotlin {
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
-                implementation(compose.material)
+                implementation(compose.material3)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
             }
@@ -33,6 +34,9 @@ kotlin {
                 api("androidx.activity:activity-compose:1.7.2")
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.10.1")
+                api("com.google.maps.android:maps-compose:2.11.4")
+                api("com.google.android.gms:play-services-maps:18.1.0")
+                api("com.airbnb.android:lottie:6.1.0")
             }
         }
         val iosX64Main by getting
