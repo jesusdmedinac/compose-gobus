@@ -4,4 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-expect fun LottieView(modifier: Modifier = Modifier)
+expect fun LottieView(modifier: Modifier = Modifier, commonLottieView: CommonLottieView)
+
+interface CommonLottieView {
+    fun <T> viewAnimation(): T
+}

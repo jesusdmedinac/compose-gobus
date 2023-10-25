@@ -3,6 +3,7 @@ package com.jesusdmedinac.compose.gobus.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
+import com.jesusdmedinac.compose.gobus.ui.composable.CommonLottieView
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.MapKit.MKMapView
 

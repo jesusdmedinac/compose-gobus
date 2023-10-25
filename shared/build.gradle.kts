@@ -36,7 +36,7 @@ kotlin {
                 api("androidx.core:core-ktx:1.10.1")
                 api("com.google.maps.android:maps-compose:2.11.4")
                 api("com.google.android.gms:play-services-maps:18.1.0")
-                api("com.airbnb.android:lottie:6.1.0")
+                api("com.airbnb.android:lottie-compose:6.1.0")
             }
         }
         val iosX64Main by getting
