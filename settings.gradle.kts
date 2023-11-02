@@ -1,4 +1,4 @@
-rootProject.name = "MyApplication"
+rootProject.name = "ComposeGobus"
 
 include(":androidApp")
 include(":shared")

@@ -1,4 +1,4 @@
-package com.jesusdmedinac.compose.gobus.ui
+package com.jesusdmedinac.compose.gobus.presentation.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

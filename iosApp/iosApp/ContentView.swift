@@ -3,17 +3,40 @@ import SwiftUI
 import shared
 import Lottie
 
-class IOSLottieView : CommonLottieView {
-  func viewAnimation() -> Any? {
+class IOSLottieBus : IOSLottieView {
+  func viewAnimation(iterations: Int32, progressRange: KotlinPair<KotlinFloat, KotlinFloat>) -> Any? {
     let lottieAnimationView = LottieAnimationView.init(name: "bus")
-    lottieAnimationView.play(toProgress: 1, loopMode: .loop)
+    var loopMode: LottieLoopMode = .repeat(Float(iterations))
+    if (iterations == Int32.max) {
+      loopMode = .loop
+    }
+    lottieAnimationView.play(fromProgress: CGFloat(truncating: progressRange.first ?? 0), toProgress: CGFloat(truncating: progressRange.second ?? 1), loopMode: loopMode)
     return lottieAnimationView
   }
 }
 
+class IOSLottieEye : IOSLottieView {
+  func viewAnimation(iterations: Int32, progressRange: KotlinPair<KotlinFloat, KotlinFloat>) -> Any? {
+    let lottieAnimationView = LottieAnimationView.init(name: "eye")
+    var loopMode: LottieLoopMode = .repeat(Float(iterations))
+    if (iterations == Int32.max) {
+      loopMode = .loop
+    }
+    lottieAnimationView.play(fromProgress: CGFloat(truncating: progressRange.first ?? 0), toProgress: CGFloat(truncating: progressRange.second ?? 1), loopMode: loopMode)
+    return lottieAnimationView
+  }
+  
+  
+}
+
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-      MainIOSKt.MainViewController(commonLottieView: IOSLottieView())
+      MainIOSKt.MainViewController(
+        iosLottieView: IOSLottieBus(),
+        iosLottieEye: IOSLottieEye(),
+        loginScreenViewModel: LoginScreenViewModelImpl(),
+        signupScreenViewModel: SignupScreenViewModelImpl()
+      )
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
