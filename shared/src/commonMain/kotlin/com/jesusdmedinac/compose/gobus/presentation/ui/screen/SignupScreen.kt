@@ -33,6 +33,7 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -264,7 +265,7 @@ fun UserEmailSignupStep(
         modifier = modifier,
         horizontalAlignment = Alignment.Start,
     ) {
-        TextField(
+        OutlinedTextField(
             value = email,
             onValueChange = {
                 email = it
@@ -289,7 +290,7 @@ fun UserEmailSignupStep(
             },
         )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(
+        OutlinedTextField(
             value = confirmEmail,
             onValueChange = {
                 confirmEmail = it
@@ -315,7 +316,7 @@ fun UserEmailSignupStep(
             },
         )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(
+        OutlinedTextField(
             value = password,
             onValueChange = {
                 password = it
@@ -358,7 +359,7 @@ fun UserEmailSignupStep(
             },
         )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(
+        OutlinedTextField(
             value = confirmPassword,
             onValueChange = {
                 confirmPassword = it
@@ -416,7 +417,7 @@ fun TravelerSignupStep(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
     ) {
-        TextField(
+        OutlinedTextField(
             value = path,
             onValueChange = {
                 path = it
@@ -448,7 +449,7 @@ fun DriverSignupStep(
         Spacer(modifier = Modifier.height(8.dp))
         Text("Ejemplo: Pinos, Presa, 5 y 10", style = MaterialTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(
+        OutlinedTextField(
             value = path,
             onValueChange = {
                 path = it
