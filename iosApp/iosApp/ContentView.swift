@@ -25,8 +25,6 @@ class IOSLottieEye : IOSLottieView {
     lottieAnimationView.play(fromProgress: CGFloat(truncating: progressRange.first ?? 0), toProgress: CGFloat(truncating: progressRange.second ?? 1), loopMode: loopMode)
     return lottieAnimationView
   }
-  
-  
 }
 
 struct ComposeView: UIViewControllerRepresentable {

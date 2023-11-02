@@ -55,6 +55,8 @@ import com.jesusdmedinac.compose.gobus.presentation.ui.composable.IOSLottieView
 import com.jesusdmedinac.compose.gobus.presentation.ui.composable.LottieAnimation
 import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignupScreenBehavior
 import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignupScreenState
+import com.jesusdmedinac.compose.gobus.utils.Platform
+import com.jesusdmedinac.compose.gobus.utils.platform
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -342,14 +344,16 @@ fun UserEmailSignupStep(
                 PasswordVisualTransformation()
             },
             trailingIcon = {
-                IconButton(onClick = signupScreenBehavior::togglePasswordVisibility) {
-                    LottieAnimation(
-                        modifier = Modifier.size(24.dp),
-                        iterations = 1,
-                        progressRange = if (signupScreenState.isPasswordVisible) 0.5f to 1f else 0f to 0.5f,
-                        iosLottieView = iosLottieEye,
-                        androidLottieView = androidLottieEye,
-                    )
+                if (platform() == Platform.Android) {
+                    IconButton(onClick = signupScreenBehavior::togglePasswordVisibility) {
+                        LottieAnimation(
+                            modifier = Modifier.size(24.dp),
+                            iterations = 1,
+                            progressRange = if (signupScreenState.isPasswordVisible) 0.5f to 1f else 0f to 0.5f,
+                            iosLottieView = iosLottieEye,
+                            androidLottieView = androidLottieEye,
+                        )
+                    }
                 }
             },
         )
@@ -384,14 +388,16 @@ fun UserEmailSignupStep(
                 PasswordVisualTransformation()
             },
             trailingIcon = {
-                IconButton(onClick = signupScreenBehavior::togglePasswordVisibility) {
-                    LottieAnimation(
-                        modifier = Modifier.size(24.dp),
-                        iterations = 1,
-                        progressRange = if (signupScreenState.isPasswordVisible) 0.5f to 1f else 0f to 0.5f,
-                        iosLottieView = iosLottieEye,
-                        androidLottieView = androidLottieEye,
-                    )
+                if (platform() == Platform.Android) {
+                    IconButton(onClick = signupScreenBehavior::togglePasswordVisibility) {
+                        LottieAnimation(
+                            modifier = Modifier.size(24.dp),
+                            iterations = 1,
+                            progressRange = if (signupScreenState.isPasswordVisible) 0.5f to 1f else 0f to 0.5f,
+                            iosLottieView = iosLottieEye,
+                            androidLottieView = androidLottieEye,
+                        )
+                    }
                 }
             },
         )
@@ -493,14 +499,16 @@ fun ResumeSignupStep(
                     }
                 },
             )
-            IconButton(onClick = signupScreenBehavior::togglePasswordVisibility) {
-                LottieAnimation(
-                    modifier = Modifier.size(24.dp),
-                    iterations = 1,
-                    progressRange = if (signupScreenState.isPasswordVisible) 0.5f to 1f else 0f to 0.5f,
-                    iosLottieView = iosLottieEye,
-                    androidLottieView = androidLottieEye,
-                )
+            if (platform() == Platform.Android) {
+                IconButton(onClick = signupScreenBehavior::togglePasswordVisibility) {
+                    LottieAnimation(
+                        modifier = Modifier.size(24.dp),
+                        iterations = 1,
+                        progressRange = if (signupScreenState.isPasswordVisible) 0.5f to 1f else 0f to 0.5f,
+                        iosLottieView = iosLottieEye,
+                        androidLottieView = androidLottieEye,
+                    )
+                }
             }
         }
         Divider()
