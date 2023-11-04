@@ -75,6 +75,10 @@ fun ComposeGobusApp(
                     SignUpScreenSideEffect.NavigateToLogin -> {
                         currentRoute = Route.LoginScreen
                     }
+
+                    SignUpScreenSideEffect.NavigateToHome -> {
+                        currentRoute = Route.HomeScreen
+                    }
                 }
             }
 

@@ -3,6 +3,7 @@ package com.jesusdmedinac.compose.gobus.presentation.viewmodel
 import com.jesusdmedinac.compose.gobus.domain.model.User
 import com.jesusdmedinac.compose.gobus.domain.usecase.SignUpUseCase
 import com.jesusdmedinac.compose.gobus.utils.isEmailValid
+import com.jesusdmedinac.compose.gobus.utils.sha256
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -95,25 +96,31 @@ class SignUpScreenViewModelImpl(
             SignUpScreenState.SignupStep.DRIVER,
             -> SignUpScreenState.SignupStep.RESUME
 
-            SignUpScreenState.SignupStep.RESUME ->
+            SignUpScreenState.SignupStep.RESUME -> {
                 createAccount()
+                return@intent
+            }
         }
         reduce {
             state.copy(currentSignupStep = nextSignupType)
         }
     }
 
-    private suspend fun SimpleSyntax<SignUpScreenState, SignUpScreenSideEffect>.createAccount(): SignUpScreenState.SignupStep {
+    private suspend fun SimpleSyntax<SignUpScreenState, SignUpScreenSideEffect>.createAccount() {
         val user = with(state) {
+            val hashedPassword = sha256(password)
             User(
                 email = email,
                 type = selectedUserType.name,
                 path = path,
-                password = password,
+                password = hashedPassword,
             )
         }
         signUpUseCase(user)
-        return SignUpScreenState.SignupStep.USER_TYPE
+        postSideEffect(SignUpScreenSideEffect.NavigateToHome)
+        delay(500)
+        postSideEffect(SignUpScreenSideEffect.Idle)
+        reduce { SignUpScreenState() }
     }
 
     override fun onPathChange(path: String): Job = intent {
@@ -179,6 +186,7 @@ data class SignUpScreenState(
 sealed class SignUpScreenSideEffect {
     data object Idle : SignUpScreenSideEffect()
     data object NavigateToLogin : SignUpScreenSideEffect()
+    data object NavigateToHome : SignUpScreenSideEffect()
 }
 
 interface SignUpScreenIntents {

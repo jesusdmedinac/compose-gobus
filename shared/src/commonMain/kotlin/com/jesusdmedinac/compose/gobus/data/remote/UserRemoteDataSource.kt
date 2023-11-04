@@ -15,12 +15,8 @@ class UserFirebaseDataSource(
         .collection("users")
         .document(user.email)
         .run {
-            if (get().exists) {
-                get().data()
-            } else {
-                set(user)
-                user
-            }
+            set(user)
+            user
         }
 
     override suspend fun getUserByEmail(email: String): User =

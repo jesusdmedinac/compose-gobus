@@ -5,6 +5,7 @@ import com.jesusdmedinac.compose.gobus.data.remote.AuthRemoteDataSource
 import com.jesusdmedinac.compose.gobus.data.remote.UserFirebaseDataSource
 import com.jesusdmedinac.compose.gobus.data.remote.UserRemoteDataSource
 import com.jesusdmedinac.compose.gobus.domain.mapper.DataUserToDomainUserMapper
+import com.jesusdmedinac.compose.gobus.domain.mapper.DomainUserToDataUserMapper
 import com.jesusdmedinac.compose.gobus.domain.repository.UserRepository
 import com.jesusdmedinac.compose.gobus.domain.repository.UserRepositoryImpl
 import com.jesusdmedinac.compose.gobus.domain.usecase.SignUpUseCase
@@ -24,6 +25,7 @@ fun dataModule(firebaseApp: FirebaseApp) = module {
 
 fun domainModule() = module {
     single { DataUserToDomainUserMapper() }
-    single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
+    single { DomainUserToDataUserMapper() }
+    single<UserRepository> { UserRepositoryImpl(get(), get(), get(), get()) }
     single<SignUpUseCase> { SignUpUseCaseImpl(get()) }
 }

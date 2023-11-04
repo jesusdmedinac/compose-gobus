@@ -6,4 +6,6 @@ import kotlinx.serialization.Serializable
 data class User(
     val email: String = "",
     val type: String = "",
+    val path: String = "",
+    val password: String = "",
 )

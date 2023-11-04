@@ -4,7 +4,8 @@ import shared
 @main
 struct iOSApp: App {
   init() {
-    KoinInitKt.doInitKoin()
+    let firebaseApp = FirebaseInitKt.doInitFirebase(context: nil)
+    KoinInitKt.doInitKoin(firebaseApp: firebaseApp)
   }
   
 	var body: some Scene {
