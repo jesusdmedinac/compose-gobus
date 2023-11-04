@@ -1,23 +1,28 @@
 package com.jesusdmedinac.compose.gobus.presentation.viewmodel
 
+import com.jesusdmedinac.compose.gobus.domain.model.User
+import com.jesusdmedinac.compose.gobus.domain.usecase.SignUpUseCase
 import com.jesusdmedinac.compose.gobus.utils.isEmailValid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 
-expect abstract class SignupScreenViewModel() :
-    CommonViewModel<SignupScreenState, SignupScreenSideEffect>,
-    SignupScreenBehavior {
+expect abstract class SignUpScreenViewModel() :
+    CommonViewModel<SignUpScreenState, SignUpScreenSideEffect>,
+    SignUpScreenIntents {
     override val scope: CoroutineScope
-    override val container: Container<SignupScreenState, SignupScreenSideEffect>
+    override val container: Container<SignUpScreenState, SignUpScreenSideEffect>
 }
 
-class SignupScreenViewModelImpl : SignupScreenViewModel() {
-    override fun onUserTypeSelected(userType: SignupScreenState.UserType) = intent {
+class SignUpScreenViewModelImpl(
+    private val signUpUseCase: SignUpUseCase,
+) : SignUpScreenViewModel() {
+    override fun onUserTypeSelected(userType: SignUpScreenState.UserType) = intent {
         reduce {
             state.copy(selectedUserType = userType)
         }
@@ -53,22 +58,22 @@ class SignupScreenViewModelImpl : SignupScreenViewModel() {
 
     override fun onBackClicked(): Job = intent {
         val previousSignupType = when (state.currentSignupStep) {
-            SignupScreenState.SignupStep.USER_TYPE -> {
-                postSideEffect(SignupScreenSideEffect.NavigateToLogin)
+            SignUpScreenState.SignupStep.USER_TYPE -> {
+                postSideEffect(SignUpScreenSideEffect.NavigateToLogin)
                 delay(500)
-                postSideEffect(SignupScreenSideEffect.Idle)
+                postSideEffect(SignUpScreenSideEffect.Idle)
                 return@intent
             }
 
-            SignupScreenState.SignupStep.USER_EMAIL -> SignupScreenState.SignupStep.USER_TYPE
+            SignUpScreenState.SignupStep.USER_EMAIL -> SignUpScreenState.SignupStep.USER_TYPE
 
-            SignupScreenState.SignupStep.TRAVELER,
-            SignupScreenState.SignupStep.DRIVER,
-            -> SignupScreenState.SignupStep.USER_EMAIL
+            SignUpScreenState.SignupStep.TRAVELER,
+            SignUpScreenState.SignupStep.DRIVER,
+            -> SignUpScreenState.SignupStep.USER_EMAIL
 
-            SignupScreenState.SignupStep.RESUME -> when (state.selectedUserType) {
-                SignupScreenState.UserType.TRAVELER -> SignupScreenState.SignupStep.TRAVELER
-                else -> SignupScreenState.SignupStep.DRIVER
+            SignUpScreenState.SignupStep.RESUME -> when (state.selectedUserType) {
+                SignUpScreenState.UserType.TRAVELER -> SignUpScreenState.SignupStep.TRAVELER
+                else -> SignUpScreenState.SignupStep.DRIVER
             }
         }
         reduce {
@@ -78,28 +83,37 @@ class SignupScreenViewModelImpl : SignupScreenViewModel() {
 
     override fun onNextClicked() = intent {
         val nextSignupType = when (state.currentSignupStep) {
-            SignupScreenState.SignupStep.USER_TYPE -> SignupScreenState.SignupStep.USER_EMAIL
-            SignupScreenState.SignupStep.USER_EMAIL -> {
+            SignUpScreenState.SignupStep.USER_TYPE -> SignUpScreenState.SignupStep.USER_EMAIL
+            SignUpScreenState.SignupStep.USER_EMAIL -> {
                 when (state.selectedUserType) {
-                    SignupScreenState.UserType.TRAVELER -> SignupScreenState.SignupStep.TRAVELER
-                    else -> SignupScreenState.SignupStep.DRIVER
+                    SignUpScreenState.UserType.TRAVELER -> SignUpScreenState.SignupStep.TRAVELER
+                    else -> SignUpScreenState.SignupStep.DRIVER
                 }
             }
 
-            SignupScreenState.SignupStep.TRAVELER,
-            SignupScreenState.SignupStep.DRIVER,
-            -> SignupScreenState.SignupStep.RESUME
+            SignUpScreenState.SignupStep.TRAVELER,
+            SignUpScreenState.SignupStep.DRIVER,
+            -> SignUpScreenState.SignupStep.RESUME
 
-            SignupScreenState.SignupStep.RESUME -> {
-                postSideEffect(SignupScreenSideEffect.CreateAccount)
-                delay(500)
-                postSideEffect(SignupScreenSideEffect.Idle)
-                return@intent
-            }
+            SignUpScreenState.SignupStep.RESUME ->
+                createAccount()
         }
         reduce {
             state.copy(currentSignupStep = nextSignupType)
         }
+    }
+
+    private suspend fun SimpleSyntax<SignUpScreenState, SignUpScreenSideEffect>.createAccount(): SignUpScreenState.SignupStep {
+        val user = with(state) {
+            User(
+                email = email,
+                type = selectedUserType.name,
+                path = path,
+                password = password,
+            )
+        }
+        signUpUseCase(user)
+        return SignUpScreenState.SignupStep.USER_TYPE
     }
 
     override fun onPathChange(path: String): Job = intent {
@@ -115,7 +129,7 @@ class SignupScreenViewModelImpl : SignupScreenViewModel() {
     }
 }
 
-data class SignupScreenState(
+data class SignUpScreenState(
     val selectedUserType: UserType = UserType.UNDEFINED,
     val currentSignupStep: SignupStep = SignupStep.USER_TYPE,
     val email: String = "",
@@ -153,16 +167,22 @@ data class SignupScreenState(
 
             SignupStep.RESUME -> true
         }
+
+    val readablePassword: String
+        get() = if (isPasswordVisible) {
+            password
+        } else {
+            password.map { '•' }.joinToString("")
+        }
 }
 
-sealed class SignupScreenSideEffect {
-    data object Idle : SignupScreenSideEffect()
-    data object NavigateToLogin : SignupScreenSideEffect()
-    data object CreateAccount : SignupScreenSideEffect()
+sealed class SignUpScreenSideEffect {
+    data object Idle : SignUpScreenSideEffect()
+    data object NavigateToLogin : SignUpScreenSideEffect()
 }
 
-interface SignupScreenBehavior {
-    fun onUserTypeSelected(userType: SignupScreenState.UserType): Job
+interface SignUpScreenIntents {
+    fun onUserTypeSelected(userType: SignUpScreenState.UserType): Job
     fun onEmailChange(email: String): Job
     fun onConfirmEmailChange(email: String): Job
     fun onPasswordChange(password: String): Job

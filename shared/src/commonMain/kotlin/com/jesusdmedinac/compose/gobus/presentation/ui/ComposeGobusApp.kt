@@ -11,12 +11,12 @@ import androidx.compose.runtime.setValue
 import com.jesusdmedinac.compose.gobus.presentation.ui.composable.AndroidLottieView
 import com.jesusdmedinac.compose.gobus.presentation.ui.composable.IOSLottieView
 import com.jesusdmedinac.compose.gobus.presentation.ui.screen.LoginScreen
-import com.jesusdmedinac.compose.gobus.presentation.ui.screen.SignupScreen
+import com.jesusdmedinac.compose.gobus.presentation.ui.screen.SignUpScreen
 import com.jesusdmedinac.compose.gobus.presentation.ui.screen.SplashScreen
 import com.jesusdmedinac.compose.gobus.presentation.viewmodel.LoginScreenSideEffect
 import com.jesusdmedinac.compose.gobus.presentation.viewmodel.LoginScreenViewModel
-import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignupScreenSideEffect
-import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignupScreenViewModel
+import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignUpScreenSideEffect
+import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignUpScreenViewModel
 
 @Composable
 fun ComposeGobusApp(
@@ -25,7 +25,7 @@ fun ComposeGobusApp(
     iosLottieEye: IOSLottieView,
     androidLottieEye: AndroidLottieView,
     loginScreenViewModel: LoginScreenViewModel,
-    signupScreenViewModel: SignupScreenViewModel,
+    signupScreenViewModel: SignUpScreenViewModel,
 ) {
     var currentRoute by remember { mutableStateOf<Route>(Route.SplashScreen) }
 
@@ -66,22 +66,19 @@ fun ComposeGobusApp(
             val signupScreenSideEffect by signupScreenViewModel
                 .container
                 .sideEffectFlow
-                .collectAsState(SignupScreenSideEffect.Idle)
+                .collectAsState(SignUpScreenSideEffect.Idle)
 
             LaunchedEffect(signupScreenSideEffect) {
                 when (signupScreenSideEffect) {
-                    SignupScreenSideEffect.Idle -> Unit
-                    SignupScreenSideEffect.CreateAccount -> {
-                        TODO("Implement create account")
-                    }
+                    SignUpScreenSideEffect.Idle -> Unit
 
-                    SignupScreenSideEffect.NavigateToLogin -> {
+                    SignUpScreenSideEffect.NavigateToLogin -> {
                         currentRoute = Route.LoginScreen
                     }
                 }
             }
 
-            SignupScreen(
+            SignUpScreen(
                 iosLottieEye = iosLottieEye,
                 androidLottieEye = androidLottieEye,
                 signupScreenState,

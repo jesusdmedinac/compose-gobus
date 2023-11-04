@@ -1,5 +1,12 @@
+buildscript {
+    dependencies {
+        classpath("com.google.gms:google-services:4.4.0")
+    }
+}
+
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization")
     id("com.android.library")
     id("org.jetbrains.compose")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
@@ -29,6 +36,20 @@ kotlin {
                 api(compose.components.resources)
                 api("org.orbit-mvi:orbit-core:6.1.0")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+                // region Serialization
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+                // endregion
+
+                // region Insert Koin
+                implementation("io.insert-koin:koin-core:3.5.0")
+                // endregion
+
+                // region Firebase
+                api("dev.gitlive:firebase-app:1.10.0")
+                api("dev.gitlive:firebase-auth:1.10.0")
+                api("dev.gitlive:firebase-firestore:1.10.0")
+                // endregion
             }
         }
         val androidMain by getting {
@@ -39,6 +60,7 @@ kotlin {
                 api("com.google.maps.android:maps-compose:2.11.4")
                 api("com.google.android.gms:play-services-maps:18.1.0")
                 api("com.airbnb.android:lottie-compose:6.1.0")
+                api("io.insert-koin:koin-androidx-compose:3.5.0")
             }
         }
         val iosX64Main by getting

@@ -36,7 +36,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -54,8 +53,8 @@ import androidx.compose.ui.unit.dp
 import com.jesusdmedinac.compose.gobus.presentation.ui.composable.AndroidLottieView
 import com.jesusdmedinac.compose.gobus.presentation.ui.composable.IOSLottieView
 import com.jesusdmedinac.compose.gobus.presentation.ui.composable.LottieAnimation
-import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignupScreenBehavior
-import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignupScreenState
+import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignUpScreenIntents
+import com.jesusdmedinac.compose.gobus.presentation.viewmodel.SignUpScreenState
 import com.jesusdmedinac.compose.gobus.utils.Platform
 import com.jesusdmedinac.compose.gobus.utils.platform
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -63,11 +62,11 @@ import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignupScreen(
+fun SignUpScreen(
     iosLottieEye: IOSLottieView,
     androidLottieEye: AndroidLottieView,
-    signupScreenState: SignupScreenState,
-    signupScreenBehavior: SignupScreenBehavior,
+    signupScreenState: SignUpScreenState,
+    signUpScreenIntents: SignUpScreenIntents,
 ) {
     Scaffold(
         topBar = {
@@ -75,16 +74,16 @@ fun SignupScreen(
                 title = {
                     Text(
                         when (signupScreenState.currentSignupStep) {
-                            SignupScreenState.SignupStep.USER_TYPE -> "¿Viajas o manejas?"
-                            SignupScreenState.SignupStep.USER_EMAIL -> "¿Cuál es tu correo electrónico?"
-                            SignupScreenState.SignupStep.TRAVELER -> "Cuéntanos qué ruta sueles tomar cada día"
-                            SignupScreenState.SignupStep.DRIVER -> "¿Cómo se llama la ruta que manejas?"
-                            SignupScreenState.SignupStep.RESUME -> "¿Está todo correcto?"
+                            SignUpScreenState.SignupStep.USER_TYPE -> "¿Viajas o manejas?"
+                            SignUpScreenState.SignupStep.USER_EMAIL -> "¿Cuál es tu correo electrónico?"
+                            SignUpScreenState.SignupStep.TRAVELER -> "Cuéntanos qué ruta sueles tomar cada día"
+                            SignUpScreenState.SignupStep.DRIVER -> "¿Cómo se llama la ruta que manejas?"
+                            SignUpScreenState.SignupStep.RESUME -> "¿Está todo correcto?"
                         },
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = signupScreenBehavior::onBackClicked) {
+                    IconButton(onClick = signUpScreenIntents::onBackClicked) {
                         Image(
                             Icons.Default.ArrowBack,
                             contentDescription = "Back",
@@ -95,11 +94,11 @@ fun SignupScreen(
         },
         floatingActionButton = {
             when (signupScreenState.currentSignupStep) {
-                SignupScreenState.SignupStep.RESUME -> Box(
+                SignUpScreenState.SignupStep.RESUME -> Box(
                     modifier = Modifier.padding(horizontal = 16.dp),
                 ) {
                     FilledIconButton(
-                        onClick = signupScreenBehavior::onNextClicked,
+                        onClick = signUpScreenIntents::onNextClicked,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(64.dp)
@@ -111,7 +110,7 @@ fun SignupScreen(
                 }
 
                 else -> FilledIconButton(
-                    onClick = signupScreenBehavior::onNextClicked,
+                    onClick = signUpScreenIntents::onNextClicked,
                     modifier = Modifier
                         .size(64.dp)
                         .clip(MaterialTheme.shapes.large),
@@ -125,44 +124,44 @@ fun SignupScreen(
             }
         },
         floatingActionButtonPosition = when (signupScreenState.currentSignupStep) {
-            SignupScreenState.SignupStep.RESUME -> FabPosition.Center
+            SignUpScreenState.SignupStep.RESUME -> FabPosition.Center
 
             else -> FabPosition.End
         },
     ) {
         when (signupScreenState.currentSignupStep) {
-            SignupScreenState.SignupStep.USER_TYPE -> UserTypeSignupStep(
+            SignUpScreenState.SignupStep.USER_TYPE -> UserTypeSignupStep(
                 modifier = Modifier.fillMaxSize().padding(vertical = 64.dp, horizontal = 32.dp),
                 signupScreenState,
-                signupScreenBehavior,
+                signUpScreenIntents,
             )
 
-            SignupScreenState.SignupStep.USER_EMAIL -> UserEmailSignupStep(
+            SignUpScreenState.SignupStep.USER_EMAIL -> UserEmailSignupStep(
                 modifier = Modifier.fillMaxSize().padding(vertical = 64.dp, horizontal = 32.dp),
                 iosLottieEye = iosLottieEye,
                 androidLottieEye = androidLottieEye,
                 signupScreenState,
-                signupScreenBehavior,
+                signUpScreenIntents,
             )
 
-            SignupScreenState.SignupStep.TRAVELER -> TravelerSignupStep(
+            SignUpScreenState.SignupStep.TRAVELER -> TravelerSignupStep(
                 modifier = Modifier.fillMaxSize().padding(vertical = 64.dp, horizontal = 32.dp),
                 signupScreenState,
-                signupScreenBehavior,
+                signUpScreenIntents,
             )
 
-            SignupScreenState.SignupStep.DRIVER -> DriverSignupStep(
+            SignUpScreenState.SignupStep.DRIVER -> DriverSignupStep(
                 modifier = Modifier.fillMaxSize().padding(vertical = 64.dp, horizontal = 32.dp),
                 signupScreenState,
-                signupScreenBehavior,
+                signUpScreenIntents,
             )
 
-            SignupScreenState.SignupStep.RESUME -> ResumeSignupStep(
+            SignUpScreenState.SignupStep.RESUME -> ResumeSignupStep(
                 modifier = Modifier.fillMaxSize().padding(vertical = 64.dp, horizontal = 32.dp),
                 iosLottieEye = iosLottieEye,
                 androidLottieEye = androidLottieEye,
                 signupScreenState,
-                signupScreenBehavior,
+                signUpScreenIntents,
             )
         }
     }
@@ -172,8 +171,8 @@ fun SignupScreen(
 @Composable
 fun UserTypeSignupStep(
     modifier: Modifier = Modifier,
-    signupScreenState: SignupScreenState,
-    signupScreenBehavior: SignupScreenBehavior,
+    signupScreenState: SignUpScreenState,
+    signUpScreenIntents: SignUpScreenIntents,
 ) {
     Column(
         modifier = modifier,
@@ -181,8 +180,8 @@ fun UserTypeSignupStep(
         verticalArrangement = Arrangement.Center,
     ) {
         listOf(
-            SignupScreenState.UserType.TRAVELER,
-            SignupScreenState.UserType.DRIVER,
+            SignUpScreenState.UserType.TRAVELER,
+            SignUpScreenState.UserType.DRIVER,
         ).forEach { userType ->
             val isSelected = signupScreenState.selectedUserType == userType
             val cardWidthFraction by animateFloatAsState(targetValue = if (isSelected) 1f else 0.9f)
@@ -209,7 +208,7 @@ fun UserTypeSignupStep(
                         .fillMaxWidth(cardWidthFraction)
                         .aspectRatio(1f),
                     onClick = {
-                        signupScreenBehavior.onUserTypeSelected(userType)
+                        signUpScreenIntents.onUserTypeSelected(userType)
                     },
                     colors = CardDefaults.cardColors(
                         containerColor = cardColorContainer,
@@ -217,15 +216,15 @@ fun UserTypeSignupStep(
                     ),
                 ) {
                     val resourceName = when {
-                        userType == SignupScreenState.UserType.TRAVELER -> "pasajero.xml"
+                        userType == SignUpScreenState.UserType.TRAVELER -> "pasajero.xml"
                         else -> "conductor.xml"
                     }
                     val contentDescription = when {
-                        userType == SignupScreenState.UserType.TRAVELER -> "Pasajero"
+                        userType == SignUpScreenState.UserType.TRAVELER -> "Pasajero"
                         else -> "Conductor"
                     }
                     val label = when {
-                        userType == SignupScreenState.UserType.TRAVELER -> "Soy Pasajero"
+                        userType == SignUpScreenState.UserType.TRAVELER -> "Soy Pasajero"
                         else -> "Soy Conductor"
                     }
                     Image(
@@ -254,8 +253,8 @@ fun UserEmailSignupStep(
     modifier: Modifier = Modifier,
     iosLottieEye: IOSLottieView,
     androidLottieEye: AndroidLottieView,
-    signupScreenState: SignupScreenState,
-    signupScreenBehavior: SignupScreenBehavior,
+    signupScreenState: SignUpScreenState,
+    signUpScreenIntents: SignUpScreenIntents,
 ) {
     var email by remember { mutableStateOf(signupScreenState.email) }
     var confirmEmail by remember { mutableStateOf(signupScreenState.confirmEmail) }
@@ -269,7 +268,7 @@ fun UserEmailSignupStep(
             value = email,
             onValueChange = {
                 email = it
-                signupScreenBehavior.onEmailChange(it)
+                signUpScreenIntents.onEmailChange(it)
             },
             label = { Text("Correo electrónico") },
             modifier = Modifier.fillMaxWidth(),
@@ -294,7 +293,7 @@ fun UserEmailSignupStep(
             value = confirmEmail,
             onValueChange = {
                 confirmEmail = it
-                signupScreenBehavior.onConfirmEmailChange(it)
+                signUpScreenIntents.onConfirmEmailChange(it)
             },
             label = { Text("Confirmar correo") },
             modifier = Modifier.fillMaxWidth(),
@@ -320,7 +319,7 @@ fun UserEmailSignupStep(
             value = password,
             onValueChange = {
                 password = it
-                signupScreenBehavior.onPasswordChange(it)
+                signUpScreenIntents.onPasswordChange(it)
             },
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
@@ -346,7 +345,7 @@ fun UserEmailSignupStep(
             },
             trailingIcon = {
                 if (platform() == Platform.Android) {
-                    IconButton(onClick = signupScreenBehavior::togglePasswordVisibility) {
+                    IconButton(onClick = signUpScreenIntents::togglePasswordVisibility) {
                         LottieAnimation(
                             modifier = Modifier.size(24.dp),
                             iterations = 1,
@@ -363,7 +362,7 @@ fun UserEmailSignupStep(
             value = confirmPassword,
             onValueChange = {
                 confirmPassword = it
-                signupScreenBehavior.onConfirmPasswordChange(it)
+                signUpScreenIntents.onConfirmPasswordChange(it)
             },
             label = { Text("Confirmar contraseña") },
             modifier = Modifier.fillMaxWidth(),
@@ -390,7 +389,7 @@ fun UserEmailSignupStep(
             },
             trailingIcon = {
                 if (platform() == Platform.Android) {
-                    IconButton(onClick = signupScreenBehavior::togglePasswordVisibility) {
+                    IconButton(onClick = signUpScreenIntents::togglePasswordVisibility) {
                         LottieAnimation(
                             modifier = Modifier.size(24.dp),
                             iterations = 1,
@@ -408,8 +407,8 @@ fun UserEmailSignupStep(
 @Composable
 fun TravelerSignupStep(
     modifier: Modifier = Modifier,
-    signupScreenState: SignupScreenState,
-    signupScreenBehavior: SignupScreenBehavior,
+    signupScreenState: SignUpScreenState,
+    signUpScreenIntents: SignUpScreenIntents,
 ) {
     var path by remember { mutableStateOf(signupScreenState.path) }
     Column(
@@ -421,7 +420,7 @@ fun TravelerSignupStep(
             value = path,
             onValueChange = {
                 path = it
-                signupScreenBehavior.onPathChange(it)
+                signUpScreenIntents.onPathChange(it)
             },
             label = { Text("Ruta") },
             modifier = Modifier
@@ -433,8 +432,8 @@ fun TravelerSignupStep(
 @Composable
 fun DriverSignupStep(
     modifier: Modifier = Modifier,
-    signupScreenState: SignupScreenState,
-    signupScreenBehavior: SignupScreenBehavior,
+    signupScreenState: SignUpScreenState,
+    signUpScreenIntents: SignUpScreenIntents,
 ) {
     var path by remember { mutableStateOf(signupScreenState.path) }
     Column(
@@ -453,7 +452,7 @@ fun DriverSignupStep(
             value = path,
             onValueChange = {
                 path = it
-                signupScreenBehavior.onPathChange(it)
+                signUpScreenIntents.onPathChange(it)
             },
             label = { Text("Ruta") },
             modifier = Modifier.fillMaxWidth(),
@@ -466,73 +465,82 @@ fun ResumeSignupStep(
     modifier: Modifier,
     iosLottieEye: IOSLottieView,
     androidLottieEye: AndroidLottieView,
-    signupScreenState: SignupScreenState,
-    signupScreenBehavior: SignupScreenBehavior,
+    signupScreenState: SignUpScreenState,
+    signUpScreenIntents: SignUpScreenIntents,
 ) {
     Column(
         modifier = modifier,
     ) {
-        Text("Tipo de usuario")
+        Text(
+            "Tipo de usuario",
+            style = MaterialTheme.typography.labelLarge,
+        )
         val userType = when (signupScreenState.selectedUserType) {
-            SignupScreenState.UserType.TRAVELER -> "Soy pasajero"
+            SignUpScreenState.UserType.TRAVELER -> "Soy pasajero"
             else -> "Soy conductor"
         }
-        Spacer(modifier = Modifier.height(4.dp))
-        Text("$userType")
-        Divider()
         Spacer(modifier = Modifier.height(8.dp))
-
-        Text("Correo electrónico")
-        Spacer(modifier = Modifier.height(4.dp))
-        Text("${signupScreenState.email}")
-        Divider()
+        Text(
+            userType,
+            style = MaterialTheme.typography.titleSmall,
+        )
         Spacer(modifier = Modifier.height(8.dp))
+        Divider()
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Contraseña")
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(
+            "Correo electrónico",
+            style = MaterialTheme.typography.labelLarge,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            signupScreenState.email,
+            style = MaterialTheme.typography.titleSmall,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Divider()
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (platform() == Platform.Android) {
             Text(
-                "${signupScreenState.password}".let { password ->
-                    if (signupScreenState.isPasswordVisible) {
-                        password
-                    } else {
-                        password.map { '•' }.joinToString("")
-                    }
-                },
+                "Contraseña",
+                style = MaterialTheme.typography.labelLarge,
             )
-            if (platform() == Platform.Android) {
-                IconButton(onClick = signupScreenBehavior::togglePasswordVisibility) {
-                    LottieAnimation(
-                        modifier = Modifier.size(24.dp),
-                        iterations = 1,
-                        progressRange = if (signupScreenState.isPasswordVisible) 0.5f to 1f else 0f to 0.5f,
-                        iosLottieView = iosLottieEye,
-                        androidLottieView = androidLottieEye,
-                    )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    signupScreenState.readablePassword,
+                )
+                if (platform() == Platform.Android) {
+                    IconButton(onClick = signUpScreenIntents::togglePasswordVisibility) {
+                        LottieAnimation(
+                            modifier = Modifier.size(24.dp),
+                            iterations = 1,
+                            progressRange = if (signupScreenState.isPasswordVisible) 0.5f to 1f else 0f to 0.5f,
+                            iosLottieView = iosLottieEye,
+                            androidLottieView = androidLottieEye,
+                        )
+                    }
                 }
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
         }
-        Divider()
-        Spacer(modifier = Modifier.height(8.dp))
 
-        Text("Ruta")
+        Text(
+            "Ruta",
+            style = MaterialTheme.typography.labelLarge,
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        Text("${signupScreenState.path}")
+        Text(
+            signupScreenState.path,
+            style = MaterialTheme.typography.titleSmall,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
         Divider()
     }
-}
-
-@Composable
-fun LottieEyeAnimation(
-    isPasswordVisible: Boolean,
-    iosLottieEye: IOSLottieView,
-    androidLottieEye: AndroidLottieView,
-) {
-    LottieAnimation(
-        modifier = Modifier.size(24.dp),
-        iterations = 1,
-        progressRange = if (isPasswordVisible) 0.5f to 1f else 1f to 0.5f,
-        iosLottieView = iosLottieEye,
-        androidLottieView = androidLottieEye,
-    )
 }

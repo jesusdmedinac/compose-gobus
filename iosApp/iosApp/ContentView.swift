@@ -31,9 +31,7 @@ struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
       MainIOSKt.MainViewController(
         iosLottieView: IOSLottieBus(),
-        iosLottieEye: IOSLottieEye(),
-        loginScreenViewModel: LoginScreenViewModelImpl(),
-        signupScreenViewModel: SignupScreenViewModelImpl()
+        iosLottieEye: IOSLottieEye()
       )
     }
 

@@ -6,10 +6,10 @@ import kotlinx.coroutines.Job
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.container
 
-actual abstract class SignupScreenViewModel :
-    CommonViewModel<SignupScreenState, SignupScreenSideEffect>,
-    SignupScreenBehavior {
+actual abstract class SignUpScreenViewModel :
+    CommonViewModel<SignUpScreenState, SignUpScreenSideEffect>,
+    SignUpScreenIntents {
     actual override val scope: CoroutineScope = CoroutineScope(Dispatchers.Unconfined + Job())
-    actual override val container: Container<SignupScreenState, SignupScreenSideEffect> =
-        scope.container(SignupScreenState())
+    actual override val container: Container<SignUpScreenState, SignUpScreenSideEffect> =
+        scope.container(SignUpScreenState())
 }
